@@ -37,3 +37,43 @@ class queries():
             """
             INSERT INTO members (name, email) VALUES ('{name}','{email}')
             """
+
+        self.check_user_exist = \
+            """
+            SELECT * from members WHERE name='{name}'
+            """
+
+        self.add_expense = \
+            """
+            INSERT INTO expenses (from_member, to_member, amount, comment) VALUES ('{}','{}',{},'{}')
+            """
+
+        self.getallusers = \
+            """
+            SELECT * FROM members
+            """
+
+        self.getallexpense_to = \
+            """
+            SELECT * from expenses where to_member='{name}'
+            """
+
+        self.getallexpense_from = \
+            """
+            SELECT * from expenses where from_member='{name}'
+            """
+
+        self.getallexpense = \
+            """
+            SELECT * from expenses where to_member='{name}' or from_member='{name}'
+            """
+
+        self.getalluserexcept = \
+            """
+            SELECT name from members where name!='{name}'
+            """
+
+        self.getallexpense_fromto = \
+            """
+            SELECT (amount) from expenses where from_member='{fname}' and to_member='{tname}'
+            """
