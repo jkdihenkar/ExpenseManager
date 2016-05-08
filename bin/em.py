@@ -13,12 +13,15 @@ help = \
         em.py [COMMAND] [ARGS-TO-COMMAND]
     examples:
         em.py adduser <username> <email-id>
-        em.py expense <from> <to> <amount> [<comment>]
+        em.py expense <from> <amount> <to> [<comment>]
         em.py listallusers
         em.py allexpenseto <uname>
         em.py allexpensefrom <uname>
         em.py allexpense <uname>
         em.py summary <uname>
+        em.py split <cs users> <amount> <to> [<cmt>]
+        em.py group <cs users> <amount> <to> [<cmt>]
+        em.py mailsummary <uname>
     """
 
 class em():
@@ -39,8 +42,8 @@ class em():
             print(help)
         else:
             from_u = args[2]
-            to_u = args[3]
-            amt = float(args[4])
+            to_u = args[4]
+            amt = float(args[3])
             if len(args) > 5:
                 cmt = args[5]
             else:
@@ -59,6 +62,22 @@ class em():
         self.con.print_summary(uname)
         em.con.cleanup()
 
+    def generate_mail_summary(self, uname):
+        self.con.mail_summary(uname)
+        em.con.cleanup()
+
+    def split_add(self, csv_users, to_user, amount, cmt=''):
+        from_users = csv_users.split(',')
+        u_amount = amount/(len(from_users) + 1)
+        for u in from_users:
+            em.con.add_expense(u, to_user, u_amount, cmt)
+        em.con.cleanup()
+
+    def group_add(self, csv_users, to_user, amount, cmt=''):
+        from_users = csv_users.split(',')
+        for u in from_users:
+            em.con.add_expense(u, to_user, amount, cmt)
+        em.con.cleanup()
 
 
 if __name__=='__main__':
@@ -78,7 +97,7 @@ if __name__=='__main__':
 
         elif command == 'expense':
             """
-            em.py expense <from> <to> <amount>
+            em.py expense <from> <amount> <to>
             """
             em.addexpense(sys.argv)
 
@@ -117,3 +136,29 @@ if __name__=='__main__':
             em.py summary <uname>
             """
             em.generate_summary(args[2])
+
+        elif command == 'split':
+            """
+            #python3.5 em.py split jd,jv,kishan 80 parth cmt
+            """
+            if len(args)>5:
+                cmt = args[5]
+            else:
+                cmt = ''
+            em.split_add(args[2], args[4], float(args[3]), cmt)
+
+        elif command == 'group':
+            """
+            em.py group jd,jv,kishan 20 parth [<cmt>]
+            """
+            if len(args) > 5:
+                cmt = args[5]
+            else:
+                cmt = ''
+            em.group_add(args[2], args[4], float(args[3]), cmt)
+
+        elif command=="mailsummary":
+            """
+            em.py mailsummary <uname>
+            """
+            em.generate_mail_summary(args[2])

@@ -1,5 +1,7 @@
 import sqlite3
 import os
+import math
+import smtplib
 import queries
 
 class connection():
@@ -102,9 +104,66 @@ class connection():
                 amount = amount + a
 
             if amount>0:
-                print("Member {} has to give you {} Rs".format(u,amount))
+                print("Member {} has to give you {} Rs".format(u,math.ceil(amount)))
             else:
-                print("You have to give {} {} Rs".format(u,-amount))
+                print("You have to give {} {} Rs".format(u,-math.ceil(amount)))
+
+    def getmailid(self, uname):
+        q = self.q.getmailid.format(name=uname)
+        res = self.exec_query(q)
+        return res.fetchall()
+
+    def mail_summary(self, uname):
+        other_users = self.list_all_user_except(uname)
+        emailid = self.getmailid(uname)
+        email = emailid[0][0]
+        summary_content = ''
+        for tup in other_users:
+            u = tup[0]
+            # print("About user = '{}'".format(u))
+
+            # Amount init to 0 if to_user = u amt--
+            # Amount from_user = u amt++
+            amount = 0
+
+            exps = self.getallexpense_fromto(uname, u)
+            for exp in exps:
+                a = float(exp[0])
+                amount = amount - a
+
+            exps = self.getallexpense_fromto(u, uname)
+            for exp in exps:
+                a = float(exp[0])
+                amount = amount + a
+
+            if amount > 0:
+                print("Member {} has to give you {} Rs".format(u, math.ceil(amount)))
+                summary_content = '\n'.join([summary_content,"Member {} has to give you {} Rs".format(u, math.ceil(amount))])
+            else:
+                print("You have to give {} {} Rs".format(u, -math.ceil(amount)))
+                summary_content = '\n'.join([summary_content, "You have to give {} {} Rs".format(u, -math.ceil(amount))])
+        self.mail_sender('jkdihenkar@gmail.com',
+                         email,
+                         'Summary Sender Service | Expense Manager',
+                         summary_content)
+
+    def mail_sender(self, sender, recievers, subject_content, mail_content):
+        try:
+            smtpObj = smtplib.SMTP('smtp.gmail.com:587')
+            smtpObj.starttls()
+            smtpObj.login(sender, 'passwordhere')
+            msg = "\r\n".join([
+                "From: jkdihenkar@gmail.com",
+                "To: "+recievers,
+                "Subject: "+subject_content,
+                "",
+                mail_content
+            ])
+            smtpObj.sendmail(sender, recievers, msg)
+            print("Successfully sent email")
+        except:
+            print("Error: unable to send email")
+            raise
 
     def cleanup(self):
         self.con.commit()

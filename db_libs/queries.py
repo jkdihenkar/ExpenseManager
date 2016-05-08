@@ -77,3 +77,8 @@ class queries():
             """
             SELECT (amount) from expenses where from_member='{fname}' and to_member='{tname}'
             """
+
+        self.getmailid = \
+            """
+            SELECT email from members where name='{name}'
+            """
