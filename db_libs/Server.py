@@ -1,14 +1,19 @@
 from flask import Flask, render_template, request, redirect, make_response
 from forms import LoginForm, RegisterForm, PreRegisterForm, AddExpenseForm
 from utils import ExpenseManagerUtils
+import sys
 import hashlib
 import connection
 
+sys.path.append('/home/jd/PycharmProjects/jd_python_experiments/ExpenseManager/bin')
+
+import em
 
 app = Flask(__name__)
 app.secret_key = "highlysecret"
 emutils = ExpenseManagerUtils.UtilsLib()
 conn = connection.connection()
+emapi = em.em()
 
 @app.route('/')
 def reroute():
@@ -17,7 +22,7 @@ def reroute():
 @app.route('/login')
 def login():
     email = request.cookies.get('loggedin')
-    if email and request.cookies.get('security_verify:'+email+':'+emutils.hash_of_hashpass(email)):
+    if email and request.cookies.get('security_verify:'+email) == emutils.hash_of_hashpass(email):
         return redirect('/home', code=302)
     else:
         form = LoginForm.LoginForm()
@@ -78,7 +83,7 @@ def check_login():
         emutils.set_session(email, request.remote_addr)
         resp_obj = make_response(redirect('/home', code=302))
         resp_obj.set_cookie('loggedin',email)
-        resp_obj.set_cookie('security_verify:'+email+':'+emutils.hash_of_hashpass(email),'OK')
+        resp_obj.set_cookie('security_verify:'+email,emutils.hash_of_hashpass(email))
         return resp_obj
     else:
         return redirect('/login', code=302)
@@ -86,15 +91,46 @@ def check_login():
 @app.route('/home')
 def home():
     user = request.cookies.get('loggedin')
-    if not emutils.check_and_update_exist_session(user):
-        print("Fail check sessions")
-        return render_template('login.html', form=LoginForm.LoginForm())
-    elif request.cookies.get('security_verify:'+user+':'+emutils.hash_of_hashpass(user))!='OK':
-        print("Fail security_Verify : {}".format('security_verify:'+emutils.hash_of_hashpass(user)))
+    if not security_feature():
         return render_template('login.html', form=LoginForm.LoginForm())
 
     form = AddExpenseForm.AddExpenseForm()
     return render_template('home.html',user=user,form=form)
+
+@app.route('/add-expense-controller',methods=['POST'])
+def add_expense():
+    if not security_feature():
+        return render_template('login.html', form=LoginForm.LoginForm())
+
+    from_list = request.form.getlist('FromMultipleList')
+    to = request.form['ToSingleSelect']
+    exp_type = request.form['ExpenseType']
+    amount = request.form['AmountInput']
+    amt = float(amount)
+    comment = request.form['CommentInput']
+
+    if exp_type == 'SPLIT':
+        # Add as split
+        print(from_list)
+        emapi.split_add_internal_api(from_list, to,amt,comment)
+    elif exp_type == 'GROUP':
+        # Add as group
+        emapi.group_add_internal_api(from_list, to,amt,comment)
+
+    return redirect('/home',code=302)
+
+# Utils Functions
+
+def security_feature():
+    user = request.cookies.get('loggedin')
+    if not emutils.check_and_update_exist_session(user):
+        print("Fail check sessions")
+        return False
+    elif request.cookies.get('security_verify:'+user) != emutils.hash_of_hashpass(user):
+        print("Fail security_Verify : {}".format('security_verify:' + emutils.hash_of_hashpass(user)))
+        return False
+    else:
+        return True
 
 if __name__ == "__main__":
     app.run(debug=True)

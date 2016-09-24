@@ -8,13 +8,33 @@
     <h1> Dashboard </h1>
     <br> <hr> <br>
     Welcome {{ user }}
-
-    <table>
-        <thead> Add Expense </thead>
-        <tr>
-            <td> {{ form.FromMultipleList.label }} </td>
-            <td> {{ form.FromMultipleList }} </td>
-        </tr>
-    </table>
+     <form action="/add-expense-controller" method="post">
+        <table align="center" border="true" cellpadding="8">
+            <thead> Add Expense </thead>
+            <tr>
+                <td> {{ form.FromMultipleList.label }} </td>
+                <td align="left"> {{ form.FromMultipleList }} </td>
+            </tr>
+            <tr>
+                <td> {{ form.ToSingleSelect.label }} </td>
+                <td> {{ form.ToSingleSelect }} </td>
+            </tr>
+            <tr>
+                <td> {{ form.ExpenseType.label }} </td>
+                <td> {{ form.ExpenseType }} </td>
+            </tr>
+            <tr>
+                <td> {{ form.AmountInput.label }} </td>
+                <td> {{ form.AmountInput }} </td>
+            </tr>
+            <tr>
+                <td> {{ form.CommentInput.label }} </td>
+                <td> {{ form.CommentInput }} </td>
+            </tr>
+            <tr>
+                <td colspan="2"> {{ form.submit }} </td>
+            </tr>
+        </table>
+      </form>
 </body>
 </html>

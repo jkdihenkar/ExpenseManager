@@ -58,14 +58,14 @@ class UtilsLib():
     def set_session(self, email,ip):
         # if not self.redisobj.exists('active_sessions:'+email) or self.redisobj.ttl('active_sessions:'+email)<1:
         self.redisobj.set('active_sessions:'+email, 'active_from_'+ip)
-        security_keyname = 'security_verify:'+email+':'+self.hash_of_hashpass(email)
-        self.redisobj.set(security_keyname,'OK')
+        security_keyname = 'security_verify:'+email
+        self.redisobj.set(security_keyname,self.hash_of_hashpass(email))
         self.redisobj.expire('active_sessions:'+email, 60*15)
         self.redisobj.expire(security_keyname, 60 * 15)
 
     def check_and_update_exist_session(self, email):
         if email and self.redisobj.exists('active_sessions:'+email) and self.redisobj.ttl('active_sessions:'+email)>0:
-            security_keyname = 'security_verify:' + email+ ':' + self.hash_of_hashpass(email)
+            security_keyname = 'security_verify:' + email
             self.redisobj.expire('active_sessions:' + email, 60 * 15)
             self.redisobj.expire(security_keyname, 60 * 15)
             return True
@@ -74,4 +74,4 @@ class UtilsLib():
 
     def clear_all_sessions(self, email):
         self.redisobj.delete('active_sessions:' + email)
-        self.redisobj.delete('security_verify:' + email+ ':' + self.hash_of_hashpass(email))
+        self.redisobj.delete('security_verify:' + email)
