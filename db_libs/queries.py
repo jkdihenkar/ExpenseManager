@@ -43,6 +43,11 @@ class queries():
             SELECT * from members WHERE name='{name}'
             """
 
+        self.check_email_exist = \
+            """
+            SELECT * from members WHERE email='{email}'
+            """
+
         self.add_expense = \
             """
             INSERT INTO expenses (from_member, to_member, amount, comment) VALUES ('{}','{}',{},'{}')
@@ -81,4 +86,20 @@ class queries():
         self.getmailid = \
             """
             SELECT email from members where name='{name}'
+            """
+
+        self.update_user_password = \
+            """
+            UPDATE members_login SET password = '{hashed_password}' WHERE email = '{email}';
+            INSERT INTO members_login(email, password) SELECT '{email}', '{hashed_password}' WHERE changes() = 0;
+            """
+
+        self.validate_login = \
+            """
+            select * from members_login where email = '{email}' and password='{hashed_password}'
+            """
+
+        self.get_password_for_email = \
+            """
+            select password from members_login where email = '{email}'
             """
