@@ -8,7 +8,7 @@ class connection():
     def __init__(self, dbname='master.db', dbpath='../db'):
         self.db_dir = dbpath
         self.master_db = os.path.join(self.db_dir, dbname)
-        self.con = sqlite3.connect(self.master_db)
+        self.con = sqlite3.connect(self.master_db,check_same_thread=False)
         self.q = queries.queries()
 
 
@@ -54,6 +54,9 @@ class connection():
 
     def exec_query(self, qstring):
         return self.con.execute(qstring)
+
+    def exec_script(self, qstring):
+        return self.con.executescript(qstring)
 
     def getallexpense(self, uname, direc=''):
         if direc == 'to':
@@ -151,7 +154,7 @@ class connection():
         try:
             smtpObj = smtplib.SMTP('smtp.gmail.com:587')
             smtpObj.starttls()
-            smtpObj.login(sender, 'passwordhere')
+            smtpObj.login(sender, 'some-vey-secure-passwd')
             msg = "\r\n".join([
                 "From: jkdihenkar@gmail.com",
                 "To: "+recievers,
