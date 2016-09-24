@@ -2,7 +2,7 @@
 
 A very simple and extensible Python based ExpenseManager Utility Tool. 
 
-Works on Python2.7 and uses SQlite to store your expenses.
+Works on Python3.5 (follows 3.x syntax) and uses SQlite to store your expenses.
 
 Working examples : 
 
