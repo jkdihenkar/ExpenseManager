@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Register to Expense Manager </title>
+</head>
+<body align="center">
+    <h1> Register to Expense Manager </h1>
+
+    <form action="/validate-reset" method="POST">
+        <table align="center" border="true" cellpadding="8">
+            <thead> Set Password </thead>
+            <tr>
+                <input type="hidden" value="{{ email }}" name="email">
+            </tr>
+            <tr>
+                <td> {{ form.password.label }} </td>
+                <td> {{ form.password }} </td>
+            </tr>
+            <tr>
+                <td> {{ form.confirm.label }} </td>
+                <td> {{ form.confirm }} </td>
+            </tr>
+            <tr>
+                <td> {{ form.otp.label }} </td>
+                <td> {{ form.otp }} </td>
+            </tr>
+            <tr> <td colspan="2"> {{ form.submit }} </td></tr>
+        </table>
+    </form>
+
+</body>
+</html>

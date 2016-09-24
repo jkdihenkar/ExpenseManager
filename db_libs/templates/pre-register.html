@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Expense Manager - Pre Register </title>
+</head>
+<body align="center">
+
+    <h1> Pre-Register </h1>
+    <form action="/validate-email" method="POST">
+        <table align="center" cellpadding="8" border="true">
+            <thead> Get OTP for your EMAIL </thead>
+            <tr>
+                <td> {{ form.email_of_user.label }} </td>
+                <td> {{ form.email_of_user }} </td>
+            </tr>
+            <tr>
+                <td colspan="2"> {{ form.generate_otp }} </td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>

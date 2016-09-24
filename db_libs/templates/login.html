@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Expense Manager Login</title>
+</head>
+<body align="center">
+    <h1> Welcome to Expense Manager </h1>
+    <br> <hr> <br>
+        <form action="/validate-login" method="post">
+            <table align="center" border="true" cellpadding="8" >
+                <thead> Login to your account </thead>
+                <tr> <br> <hr> <br> </tr>
+                <tr>
+                    <td> {{ form.email.label }} </td>
+                    <td> {{  form.email }} </td>
+                </tr>
+                <tr>
+                    <td> {{ form.password.label }} </td>
+                    <td> {{ form.password }} </td>
+                </tr>
+                <tr> <td colspan="2"> {{ form.submit }} </td></tr>
+            </table>
+        </form>
+        <br> <br>
+        <center> <a href="/pre-register"> Register </a> </center>
+</body>
+</html>
