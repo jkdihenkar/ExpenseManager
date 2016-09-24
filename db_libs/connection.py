@@ -5,7 +5,7 @@ import smtplib
 import queries
 
 class connection():
-    def __init__(self, dbname='master.db', dbpath='../db'):
+    def __init__(self, dbname='master_testing_live.db', dbpath='../db'):
         self.db_dir = dbpath
         self.master_db = os.path.join(self.db_dir, dbname)
         self.con = sqlite3.connect(self.master_db,check_same_thread=False)

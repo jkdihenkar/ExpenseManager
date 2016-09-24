@@ -1,7 +1,7 @@
 import sys
 
-sys.path.append('../db_libs')
-sys.path.append('../models')
+sys.path.append('/home/jd/PycharmProjects/jd_python_experiments/ExpenseManager/db_libs')
+sys.path.append('/home/jd/PycharmProjects/jd_python_experiments/ExpenseManager/models')
 
 import connection
 
@@ -68,17 +68,25 @@ class em():
 
     def split_add(self, csv_users, to_user, amount, cmt=''):
         from_users = csv_users.split(',')
-        u_amount = amount/(len(from_users) + 1)
+        self.split_add_internal_api(from_users,to_user,amount,cmt)
+        self.con.cleanup()
+
+    def split_add_internal_api(self,from_users, to_user, amount, cmt=''):
+        u_amount = amount / (len(from_users) + 1)
         for u in from_users:
-            em.con.add_expense(u, to_user, u_amount, cmt)
-        em.con.cleanup()
+            self.con.add_expense(u, to_user, u_amount, cmt)
+        self.con.con.commit()
 
     def group_add(self, csv_users, to_user, amount, cmt=''):
         from_users = csv_users.split(',')
-        for u in from_users:
-            em.con.add_expense(u, to_user, amount, cmt)
-        em.con.cleanup()
+        self.group_add_internal_api(from_users, to_user, amount, cmt)
+        self.con.cleanup()
 
+
+    def group_add_internal_api(self, from_users, to_user, amount, cmt=''):
+        for u in from_users:
+            self.con.add_expense(u, to_user, amount, cmt)
+        self.con.con.commit()
 
 if __name__=='__main__':
     em = em()
