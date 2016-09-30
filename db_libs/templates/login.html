@@ -3,26 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>Expense Manager Login</title>
+    <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="static/font-awesome-4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="static/css/style.css">
 </head>
-<body align="center">
-    <h1> Welcome to Expense Manager </h1>
-    <br> <hr> <br>
-        <form action="/validate-login" method="post">
-            <table align="center" border="true" cellpadding="8" >
-                <thead> Login to your account </thead>
-                <tr> <br> <hr> <br> </tr>
-                <tr>
-                    <td> {{ form.email.label }} </td>
-                    <td> {{  form.email }} </td>
-                </tr>
-                <tr>
-                    <td> {{ form.password.label }} </td>
-                    <td> {{ form.password }} </td>
-                </tr>
-                <tr> <td colspan="2"> {{ form.submit }} </td></tr>
-            </table>
-        </form>
+<body>
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">Welcome To Expense Manager</a>
+      </div>
+    </div>
+  </nav>
+  <div id="login-form">
+    <form action="/validate-login" method="post">
+      <!-- <table border="true" cellpadding="8" >
+
+          <tr>
+              <td> {{ form.email.label }} </td>
+              <td> {{  form.email }} </td>
+          </tr>
+          <tr>
+              <td> {{ form.password.label }} </td>
+              <td> {{ form.password }} </td>
+          </tr>
+          <tr> <td colspan="2"> {{ form.submit }} </td></tr>
+      </table> -->
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-addon"><i class="fa fa-user-secret" aria-hidden="true"></i></div>
+            <input type="text" class="form-control" id="uname" placeholder="Enter User Name">
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="input-group">
+            <div class="input-group-addon"><i class="fa fa-unlock-alt" aria-hidden="true"></i></div>
+            <input type="password" class="form-control" id="pwd" placeholder="Enter Password">
+          </div>
+        </div>
+    <button type="submit" class="btn btn-primary"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> LogIn</button>
+  </form>
+  </div>
         <br> <br>
-        <center> <a href="/pre-register"> Register </a> </center>
+        <center> <a href="/pre-register"> Forgot Password? </a> </center>
+<script type="text/javascript" src="static/js/jquery-3.1.1.min.js"></script> 
+<script type="text/javascript" src="static/js/bootstrap.min.js"></script> 
 </body>
 </html>
