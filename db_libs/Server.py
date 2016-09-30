@@ -4,6 +4,7 @@ from utils import ExpenseManagerUtils
 import sys
 import hashlib
 import connection
+from utils.nocache import nocache
 
 sys.path.append('/home/jd/PycharmProjects/jd_python_experiments/ExpenseManager/bin')
 
@@ -20,6 +21,7 @@ def reroute():
     return redirect('/login', code=302)
 
 @app.route('/login')
+@nocache
 def login():
     email = request.cookies.get('loggedin')
     if email and request.cookies.get('security_verify:'+email) == emutils.hash_of_hashpass(email):
