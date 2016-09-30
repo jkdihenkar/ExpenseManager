@@ -12,6 +12,8 @@ import em
 
 app = Flask(__name__)
 app.secret_key = "highlysecret"
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+
 emutils = ExpenseManagerUtils.UtilsLib()
 conn = connection.connection()
 emapi = em.em()
@@ -21,7 +23,6 @@ def reroute():
     return redirect('/login', code=302)
 
 @app.route('/login')
-@nocache
 def login():
     email = request.cookies.get('loggedin')
     if email and request.cookies.get('security_verify:'+email) == emutils.hash_of_hashpass(email):
