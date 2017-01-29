@@ -23,7 +23,7 @@ class AddExpenseForm(Form):
     otp = PasswordField("OTP : ")
     submit = SubmitField("Register")
     ToSingleSelect = SelectField("To Expense : ", choices=allusers)
-    ExpenseType = SelectField("Type : ", choices=[('SPLIT','SPLIT'),('GROUP','GROUP')])
+    ExpenseType = SelectField("Type : ", choices=[('GROUP','GROUP'),('SPLIT','SPLIT')])
     AmountInput = FloatField("Amount : ")
     CommentInput = TextAreaField("Comment : ")
     submit = SubmitField("Add Expense")

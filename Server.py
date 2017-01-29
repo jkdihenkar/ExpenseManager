@@ -1,12 +1,20 @@
+import os
+APP_PATH = os.path.realpath('.')
+
+import sys
+sys.path.append(os.path.join(APP_PATH,'bin'))
+sys.path.append(os.path.join(APP_PATH,'db_libs'))
+sys.path.append(os.path.join(APP_PATH,'db_libs/utils'))
+
+
 from flask import Flask, render_template, request, redirect, make_response
 from forms import LoginForm, RegisterForm, PreRegisterForm, AddExpenseForm
 from utils import ExpenseManagerUtils
-import sys
 import hashlib
 import connection
-from utils.nocache import nocache
+import os
+from nocache import nocache
 
-sys.path.append('/home/jd/PycharmProjects/jd_python_experiments/ExpenseManager/bin')
 
 import em
 

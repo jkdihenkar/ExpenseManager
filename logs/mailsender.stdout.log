@@ -1,0 +1,56 @@
+python3.5: can't open file 'mailsender_service.py': [Errno 2] No such file or directory
+{"subject": "OTP for Expense Manager", "mailtext": "  Your OTP for Reset Password is 1033765", "emailID": "jigar.h.parmar@gmail.com"}
+Successfully sent email
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/site-packages/redis/connection.py", line 129, in _read_from_socket
+    raise socket.error(SERVER_CLOSED_CONNECTION_ERROR)
+OSError: Connection closed by server.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/site-packages/redis/client.py", line 573, in execute_command
+    return self.parse_response(connection, command_name, **options)
+  File "/usr/lib/python3.5/site-packages/redis/client.py", line 585, in parse_response
+    response = connection.read_response()
+  File "/usr/lib/python3.5/site-packages/redis/connection.py", line 577, in read_response
+    response = self._parser.read_response()
+  File "/usr/lib/python3.5/site-packages/redis/connection.py", line 238, in read_response
+    response = self._buffer.readline()
+  File "/usr/lib/python3.5/site-packages/redis/connection.py", line 168, in readline
+    self._read_from_socket()
+  File "/usr/lib/python3.5/site-packages/redis/connection.py", line 143, in _read_from_socket
+    (e.args,))
+redis.exceptions.ConnectionError: Error while reading from socket: ('Connection closed by server.',)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/site-packages/redis/connection.py", line 439, in connect
+    sock = self._connect()
+  File "/usr/lib/python3.5/site-packages/redis/connection.py", line 494, in _connect
+    raise err
+  File "/usr/lib/python3.5/site-packages/redis/connection.py", line 482, in _connect
+    sock.connect(socket_address)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "db_libs/utils/mailsender_service.py", line 42, in <module>
+    ms.eventloop()
+  File "db_libs/utils/mailsender_service.py", line 37, in eventloop
+    self.routine()
+  File "db_libs/utils/mailsender_service.py", line 30, in routine
+    item = self.redisobj.brpop('L:mailinglist')[1].decode("utf-8")
+  File "/usr/lib/python3.5/site-packages/redis/client.py", line 1183, in brpop
+    return self.execute_command('BRPOP', *keys)
+  File "/usr/lib/python3.5/site-packages/redis/client.py", line 578, in execute_command
+    connection.send_command(*args)
+  File "/usr/lib/python3.5/site-packages/redis/connection.py", line 563, in send_command
+    self.send_packed_command(self.pack_command(*args))
+  File "/usr/lib/python3.5/site-packages/redis/connection.py", line 538, in send_packed_command
+    self.connect()
+  File "/usr/lib/python3.5/site-packages/redis/connection.py", line 442, in connect
+    raise ConnectionError(self._error_message(e))
+redis.exceptions.ConnectionError: Error 111 connecting to localhost:7781. Connection refused.

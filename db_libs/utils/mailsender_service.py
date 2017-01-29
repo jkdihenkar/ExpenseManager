@@ -12,7 +12,7 @@ class mailsender_service():
         try:
             smtpObj = smtplib.SMTP('smtp.gmail.com:587')
             smtpObj.starttls()
-            smtpObj.login(sender, 'some-vey-secure-passwd')
+            smtpObj.login(sender, 'jaykdihenkar#24101993')
             msg = "\r\n".join([
                 "From: jkdihenkar@gmail.com",
                 "To: "+recievers,

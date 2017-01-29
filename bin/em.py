@@ -1,7 +1,7 @@
 import sys
 
-sys.path.append('/home/jd/PycharmProjects/jd_python_experiments/ExpenseManager/db_libs')
-sys.path.append('/home/jd/PycharmProjects/jd_python_experiments/ExpenseManager/models')
+sys.path.append('../db_libs')
+sys.path.append('../models')
 
 import connection
 

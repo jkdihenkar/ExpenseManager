@@ -1,13 +1,22 @@
-import sqlite3
 import os
+APP_PATH = os.path.realpath('.')
+
+import sys
+sys.path.append(os.path.join(APP_PATH, '../bin'))
+sys.path.append(os.path.join(APP_PATH, '../db_libs'))
+
+import sqlite3
 import math
 import smtplib
 import queries
 
+DB_PATH = os.path.join(APP_PATH, 'db')
+
 class connection():
-    def __init__(self, dbname='master_testing_live.db', dbpath='../db'):
+    def __init__(self, dbname='master_testing_live.db', dbpath=DB_PATH):
         self.db_dir = dbpath
         self.master_db = os.path.join(self.db_dir, dbname)
+        print(self.master_db)
         self.con = sqlite3.connect(self.master_db,check_same_thread=False)
         self.q = queries.queries()
 
@@ -154,7 +163,7 @@ class connection():
         try:
             smtpObj = smtplib.SMTP('smtp.gmail.com:587')
             smtpObj.starttls()
-            smtpObj.login(sender, 'some-vey-secure-passwd')
+            smtpObj.login(sender, 'jaykdihenkar#24101993')
             msg = "\r\n".join([
                 "From: jkdihenkar@gmail.com",
                 "To: "+recievers,

@@ -1,0 +1,5 @@
+for name in jd jv parth kishan hardik jigar harshil jayb ksir gautm parakh;
+do
+  echo "Sending mail to $name : ====> " ;
+  ./exec mailsummary $name &
+done;
