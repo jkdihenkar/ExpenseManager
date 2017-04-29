@@ -1,22 +1,23 @@
 import os
-APP_PATH = os.path.realpath('.')
+APP_PATH,SCRIPT_NAME = os.path.split(os.path.realpath(__file__))
 
 import sys
 sys.path.append(os.path.join(APP_PATH, '../bin'))
-sys.path.append(os.path.join(APP_PATH, '../db_libs'))
+sys.path.append(os.path.join(APP_PATH, APP_PATH))
 
 import sqlite3
 import math
 import smtplib
 import queries
+from password_script import password
 
-DB_PATH = os.path.join(APP_PATH, 'db')
+DB_PATH = os.path.join(APP_PATH, '../db')
 
 class connection():
-    def __init__(self, dbname='master_testing_live.db', dbpath=DB_PATH):
+    def __init__(self, dbname='master.db', dbpath=DB_PATH):
         self.db_dir = dbpath
         self.master_db = os.path.join(self.db_dir, dbname)
-        print(self.master_db)
+        #print(self.master_db)
         self.con = sqlite3.connect(self.master_db,check_same_thread=False)
         self.q = queries.queries()
 
@@ -163,7 +164,7 @@ class connection():
         try:
             smtpObj = smtplib.SMTP('smtp.gmail.com:587')
             smtpObj.starttls()
-            smtpObj.login(sender, 'jaykdihenkar#24101993')
+            smtpObj.login(sender, password)
             msg = "\r\n".join([
                 "From: jkdihenkar@gmail.com",
                 "To: "+recievers,

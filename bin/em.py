@@ -67,7 +67,11 @@ class em():
         em.con.cleanup()
 
     def split_add(self, csv_users, to_user, amount, cmt=''):
-        from_users = csv_users.split(',')
+        if csv_users == 'all':
+            from_users = [ 'kishan', 'jigar', 'hardik', 'parakh', 'parth', 'jv', 'jd' ]
+            from_users.remove(to_user)
+        else:
+            from_users = csv_users.split(',')
         self.split_add_internal_api(from_users,to_user,amount,cmt)
         self.con.cleanup()
 
@@ -78,7 +82,11 @@ class em():
         self.con.con.commit()
 
     def group_add(self, csv_users, to_user, amount, cmt=''):
-        from_users = csv_users.split(',')
+        if csv_users == 'all':
+            from_users = [ 'kishan', 'jigar', 'hardik', 'parakh', 'parth', 'jv', 'jd' ]
+            from_users.remove(to_user)
+        else:
+            from_users = csv_users.split(',')
         self.group_add_internal_api(from_users, to_user, amount, cmt)
         self.con.cleanup()
 
@@ -150,7 +158,7 @@ if __name__=='__main__':
             #python3.5 em.py split jd,jv,kishan 80 parth cmt
             """
             if len(args)>5:
-                cmt = args[5]
+                cmt = ' '.join(args[5:])
             else:
                 cmt = ''
             em.split_add(args[2], args[4], float(args[3]), cmt)
@@ -160,7 +168,7 @@ if __name__=='__main__':
             em.py group jd,jv,kishan 20 parth [<cmt>]
             """
             if len(args) > 5:
-                cmt = args[5]
+                cmt = ' '.join(args[5:])
             else:
                 cmt = ''
             em.group_add(args[2], args[4], float(args[3]), cmt)
