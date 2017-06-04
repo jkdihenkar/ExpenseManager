@@ -145,7 +145,15 @@ if __name__=='__main__':
             """
             res = em.con.getallexpense(args[2])
             for row in res:
-                print(row)
+                print("LOG({}) INFO - ID ({}) :: FROM : {} --> TO {} AMOUNT {} for {}".format(
+                    row[5],
+                    row[0],
+                    row[1],
+                    row[2],
+                    row[3],
+                    row[4]
+                ))
+                # print(row)
 
         elif command == 'summary':
             """

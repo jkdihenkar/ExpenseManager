@@ -1,6 +1,7 @@
 import redis
 import smtplib
 import json
+from password_script import password
 
 class mailsender_service():
 
@@ -12,9 +13,9 @@ class mailsender_service():
         try:
             smtpObj = smtplib.SMTP('smtp.gmail.com:587')
             smtpObj.starttls()
-            smtpObj.login(sender, 'jaykdihenkar#24101993')
+            smtpObj.login(sender, password)
             msg = "\r\n".join([
-                "From: jkdihenkar@gmail.com",
+                "From: jkdihenkar.projects@gmail.com",
                 "To: "+recievers,
                 "Subject: "+subject_content,
                 "",
@@ -30,7 +31,7 @@ class mailsender_service():
         item = self.redisobj.brpop('L:mailinglist')[1].decode("utf-8")
         print(item)
         mail = json.loads(item)
-        self.mail_sender('jkdihenkar@gmail.com', mail['emailID'],mail['subject'],mail['mailtext'])
+        self.mail_sender('jkdihenkar.projects@gmail.com', mail['emailID'],mail['subject'],mail['mailtext'])
 
     def eventloop(self):
         while(True):

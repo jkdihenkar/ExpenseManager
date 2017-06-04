@@ -104,17 +104,17 @@ class connection():
 
             # Amount init to 0 if to_user = u amt--
             # Amount from_user = u amt++
-            amount = 0
+            amount = float(0)
 
             exps = self.getallexpense_fromto(uname, u)
             for exp in exps:
                 a = float(exp[0])
-                amount = amount - a
+                amount = float(amount - float(a))
 
             exps = self.getallexpense_fromto(u, uname)
             for exp in exps:
                 a = float(exp[0])
-                amount = amount + a
+                amount = float(amount + a)
 
             if amount>0:
                 print("Member {} has to give you {} Rs".format(u,math.ceil(amount)))
@@ -137,17 +137,17 @@ class connection():
 
             # Amount init to 0 if to_user = u amt--
             # Amount from_user = u amt++
-            amount = 0
+            amount = 0.00
 
             exps = self.getallexpense_fromto(uname, u)
             for exp in exps:
                 a = float(exp[0])
-                amount = amount - a
+                amount = float(amount - a)
 
             exps = self.getallexpense_fromto(u, uname)
             for exp in exps:
                 a = float(exp[0])
-                amount = amount + a
+                amount = float(amount + a)
 
             if amount > 0:
                 print("Member {} has to give you {} Rs".format(u, math.ceil(amount)))
@@ -155,7 +155,7 @@ class connection():
             else:
                 print("You have to give {} {} Rs".format(u, -math.ceil(amount)))
                 summary_content = '\n'.join([summary_content, "You have to give {} {} Rs".format(u, -math.ceil(amount))])
-        self.mail_sender('jkdihenkar@gmail.com',
+        self.mail_sender('jkdihenkar.projects@gmail.com',
                          email,
                          'Summary Sender Service | Expense Manager',
                          summary_content)
@@ -166,7 +166,7 @@ class connection():
             smtpObj.starttls()
             smtpObj.login(sender, password)
             msg = "\r\n".join([
-                "From: jkdihenkar@gmail.com",
+                "From: jkdihenkar.projects@gmail.com",
                 "To: "+recievers,
                 "Subject: "+subject_content,
                 "",
