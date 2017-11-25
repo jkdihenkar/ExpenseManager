@@ -7,7 +7,7 @@ input_file = open(input_path, 'r+')
 out_file = open('commands.sh', 'w+')
 error_file = open('error_records.txt', 'w+')
 es = Elasticsearch(
-    'http://127.0.0.1:8084',
+    'http://127.0.0.1:9200',
     timeout=120
 )
 
@@ -140,7 +140,31 @@ def populate_es():
                 "actual_username": user[1]
             }
         )
-
+    for user in users:
+        es.index(
+            index="expense_manager",
+            doc_type="user",
+            body={
+                "username": user,
+                "actual_username": user
+            }
+        )
+    mappings_name = { 
+        'hdk': 'hardik',
+        'parag': 'parakh',
+        'paado': 'parth',
+        'pado': 'parth',
+        'chotyo': 'hardik'  
+    }
+    for usrname, actusername in mappings_name.items():
+        es.index(
+            index="expense_manager",
+            doc_type="user",
+            body={
+               "username": usrname,
+               "actual_username": actusername
+           }
+        )
 
 def check_user_in_db(user):
     search_q = Search(using=es, index='expense_manager', doc_type='user') \
@@ -157,7 +181,10 @@ def check_user_in_db(user):
     return set(res)
 
 # populate_es()
-#check_user_in_db("Parag 22")
+# check_user_in_db("Parag 22")
+# check_user_in_db("chotyo 22")
+# check_user_in_db("Pado 22")
+# check_user_in_db("Paado 22")
 #integration_test("20/03/17, 10:13 PM - Jay Vora: jv kishan [9.4] to jd for perk")
 
 for line in input_file:
