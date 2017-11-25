@@ -7,13 +7,12 @@ input_file = open(input_path, 'r+')
 out_file = open('commands.sh', 'w+')
 error_file = open('error_records.txt', 'w+')
 es = Elasticsearch(
-    'https://127.0.0.1:8084',
-    ca_certs='/opt/evive/pkgs/elasticsearch-5.2.2/config/keys/ca.pem',
-    http_auth=('admin', 'changeme'),
+    'http://127.0.0.1:8084',
     timeout=120
 )
 
 
+# TODO
 def parse_date(str_date):
     """
     Sample input :: 07/03/17, 10:42 PM
@@ -22,6 +21,7 @@ def parse_date(str_date):
     """
     pass
 
+
 def get_record_details(line):
     """
     Sample input : 07/03/17, 10:42 PM - Jay Vora: Parakh, parth, kishan, hdk 110/5 to Jv roti
@@ -29,27 +29,28 @@ def get_record_details(line):
     :return: 
     """
     if 'M -' in line:
-        record_string = line.split('M -')[1]
+        record_string = line.split('M -', maxsplit=1)[1]
         return record_string
     return None
 
 
 def get_who_made_entry_and_entry(record_line):
     if ':' in record_line:
-        record_user, record_line = record_line.split(':')
+        record_user, record_line = record_line.split(':', maxsplit=1)
         return record_user, record_line
 
     return None
+
 
 def ultimate_tokenizer(record_data):
     return re.findall(r"[\w\.\-']+", record_data)
 
 
 def record_data_to_token(record_data):
-    split = record_data.split('to')
+    split = record_data.split('to', maxsplit=1)
     if len(split) > 1:
         return split
-    split = record_data.split(']')
+    split = record_data.split(']', maxsplit=1)
     if len(split) > 0:
         return split
 
@@ -57,7 +58,11 @@ def record_data_to_token(record_data):
 def digits_only(str_amt):
     return re.findall(r"\d", str_amt)
 
+
 def get_amount_from_record_string(record_data_from):
+    # print("INPUT: {} , OUTPUT: {}".format(
+    #     record_data_from, record_data_from.split(' ')[-1]
+    # ))
     return record_data_from.split(' ')[-1]
 
 
@@ -78,7 +83,7 @@ def integration_test(data):
         step2[1]
     )
 
-    step3[0] = step3[0].rstrip(' ')
+    step3[0] = step3[0].rstrip()
 
     print(step3)
 
@@ -98,18 +103,21 @@ def integration_test(data):
         except ValueError as ve:
             raise
 
-
     comment_string = ' '.join(ultimate_tokenizer(step3[1].lstrip(' '))[1:])
 
     operation_str = "split" if '/' in get_amount_from_record_string(step3[0]) else "group"
+
+    if len(amount_value) > 1 and int(amount_value[1]) == len(from_user_list):
+        operation_str = "group"
+        amount_value[0] = str(
+            float(amount_value[0]) / float(amount_value[1])
+        )
 
     print("from : ",  from_user_list)
     print("amount : ", amount_value )
     print("to : ", to_user)
     print("comment : ", comment_string)
     print("operation : ", operation_str)
-
-
 
     out_file.write('./exec {} {} {} {} {}\n'.format(
         operation_str,
