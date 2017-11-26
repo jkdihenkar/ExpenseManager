@@ -2,16 +2,6 @@ from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search, utils
 import re
 
-input_path = 'incoming_wa.txt'
-input_file = open(input_path, 'r+')
-out_file = open('commands.sh', 'w+')
-error_file = open('error_records.txt', 'w+')
-es = Elasticsearch(
-    'http://127.0.0.1:9200',
-    timeout=120
-)
-
-
 # TODO
 def parse_date(str_date):
     """
@@ -66,7 +56,7 @@ def get_amount_from_record_string(record_data_from):
     return record_data_from.split(' ')[-1]
 
 
-def integration_test(data):
+def integration_test(es, data):
     step1 = get_record_details(
         data
     )
@@ -89,16 +79,16 @@ def integration_test(data):
 
     amount_value = ultimate_tokenizer(get_amount_from_record_string(step3[0]))
 
-    to_user = list(check_user_in_db(ultimate_tokenizer(step3[1])[0]))[0]
+    to_user = list(check_user_in_db(es, ultimate_tokenizer(step3[1])[0]))[0]
 
     if 'all' not in step3[0].lower():
-        from_user_list = check_user_in_db(step3[0])
+        from_user_list = check_user_in_db(es, step3[0])
     else:
         try:
-            from_user_list = check_user_in_db(step3[0])
+            from_user_list = check_user_in_db(es, step3[0])
             from_user_list = from_user_list - set([to_user])
             if '-' in step3[0]:
-                removables =  check_user_in_db(step3[0].lower().replace('all', ''))
+                removables =  check_user_in_db(es, step3[0].lower().replace('all', ''))
                 from_user_list = from_user_list - removables
         except ValueError as ve:
             raise
@@ -127,46 +117,7 @@ def integration_test(data):
         comment_string
     ))
 
-
-def populate_es():
-    users = ["jd" , "jv", "hardik", "kishan", "parth", "jayb", "jigar", "gautm", "harshil", "parakh"]
-    fuzzy = [ ("all", [ "parakh", "jd",  "jv",  "hardik", "kishan", "parth", "jigar" ]) ]
-    for user in fuzzy:
-        es.index(
-            index="expense_manager",
-            doc_type="user",
-            body={
-                "username": user[0],
-                "actual_username": user[1]
-            }
-        )
-    for user in users:
-        es.index(
-            index="expense_manager",
-            doc_type="user",
-            body={
-                "username": user,
-                "actual_username": user
-            }
-        )
-    mappings_name = { 
-        'hdk': 'hardik',
-        'parag': 'parakh',
-        'paado': 'parth',
-        'pado': 'parth',
-        'chotyo': 'hardik'  
-    }
-    for usrname, actusername in mappings_name.items():
-        es.index(
-            index="expense_manager",
-            doc_type="user",
-            body={
-               "username": usrname,
-               "actual_username": actusername
-           }
-        )
-
-def check_user_in_db(user):
+def check_user_in_db(es, user):
     search_q = Search(using=es, index='expense_manager', doc_type='user') \
         .query('match', username=user)
 
@@ -180,19 +131,25 @@ def check_user_in_db(user):
     print(res)
     return set(res)
 
-# populate_es()
-# check_user_in_db("Parag 22")
-# check_user_in_db("chotyo 22")
-# check_user_in_db("Pado 22")
-# check_user_in_db("Paado 22")
 #integration_test("20/03/17, 10:13 PM - Jay Vora: jv kishan [9.4] to jd for perk")
+if __name__ == "__main__":
+    input_path = 'incoming_wa.txt'
+    input_file = open(input_path, 'r+')
+    out_file = open('commands.sh', 'w+')
+    error_file = open('error_records.txt', 'w+')
+    
+    es = Elasticsearch(
+        'http://127.0.0.1:9200',
+        timeout=120
+    )
 
-for line in input_file:
-    try:
-        integration_test(line)
-    except Exception as e:
-        print(e)
-        error_file.write(line)
 
-out_file.close()
-error_file.close()
+    for line in input_file:
+        try:
+            integration_test(es, line)
+        except Exception as e:
+            print(e)
+            error_file.write(line)
+
+    out_file.close()
+    error_file.close()
